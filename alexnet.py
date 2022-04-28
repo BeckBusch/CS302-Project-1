@@ -13,19 +13,19 @@ device = 'cuda:0' if cuda.is_available() else 'cpu'
 print(f"Training MNIST on {device}")
 
 # Resize the images
-# transform = transforms.Compose(
-#     [transforms.ToTensor()])#,
-     #transforms.Resize(99)])
+transform = transforms.Compose(
+    [transforms.ToTensor(),
+     transforms.Resize(99)])
 
 # MNIST dataset
 training_dataset = datasets.MNIST(root = 'mnist_data/',
                                   train = True, 
-                                  transform = transforms.ToTensor(),
+                                  transform = transform,
                                   download = True)
 
 testing_dataset = datasets.MNIST(root = 'mnist_data/',
                                  train = False,
-                                 transform = transforms.ToTensor())
+                                 transform = transform)
 
 # Create data loaders
 training_loader = data.DataLoader(training_dataset, batch_size = batch_size, shuffle = True)
@@ -56,35 +56,38 @@ class LeNet(nn.Module):
         return x
 
 # AlexNet Model
-# class AlexNet(nn.Module):
+class AlexNet(nn.Module):
 
-#     def __init__(self):
-        # self.l1 = nn.Conv2d(1, 96, 11, stride = 4)
-        # self.l2 = nn.MaxPool2d(3, stride = 2)
-        # self.l3 = nn.Conv2d(96, 256, 5, padding = 2)
-        # self.l4 = nn.MaxPool2d(3, stride = 2)
-        # self.l5 = nn.Conv2d(256, 384, 3, padding = 1)
-        # self.l6 = nn.Conv2d(384, 384, 3, padding = 1)
-        # self.l7 = nn.Conv2d(384, 256, 3, padding = 1)
-        # self.l8 = nn.MaxPool2d(3, stride = 2)
-        # self.fc1 = nn.Linear(2 * 2 * 256, 256)
-        # self.fc2 = nn.Linear(256, 256)
-        # self.fc3 = nn.Linear(256, 62)
+    def __init__(self):
+        super(AlexNet, self).__init__()
+        self.l1 = nn.Conv2d(1, 96, 11, stride = 4)
+        self.l2 = nn.MaxPool2d(3, stride = 2)
+        self.l3 = nn.Conv2d(96, 256, 5, padding = 2)
+        self.l4 = nn.MaxPool2d(3, stride = 2)
+        self.l5 = nn.Conv2d(256, 384, 3, padding = 1)
+        self.l6 = nn.Conv2d(384, 384, 3, padding = 1)
+        self.l7 = nn.Conv2d(384, 256, 3, padding = 1)
+        self.l8 = nn.MaxPool2d(3, stride = 2)
+        self.fc1 = nn.Linear(2 * 2 * 256, 256)
+        self.fc2 = nn.Linear(256, 256)
+        self.fc3 = nn.Linear(256, 62)
+        self.do = nn.Dropout(p = 0.5)
 
-    # def forward(self, x):
-
-        # next = self.l2(F.relu(self.l1(next)))
-        # next = self.l4(F.relu(self.l3(next)))
-        # next = F.relu(self.l5(next))
-        # next = F.relu(self.l6(next))
-        # next = self.l8(F.relu(self.l7(next)))
-        # next = next.view(-1, 2 * 2 * 256)
-        # next = F.dropout(self.fc1(next), p = 0.5)
-        # next = F.dropout(self.fc2(next), p = 0.5)
-        # return self.fc3(next)
+    def forward(self, x):
+        x = self.l2(torch.relu(self.l1(x)))
+        x = self.l4(torch.relu(self.l3(x)))
+        x = torch.relu(self.l5(x))
+        x = torch.relu(self.l6(x))
+        x = self.l8(torch.relu(self.l7(x)))
+        x = x.view(-1, 2 * 2 * 256)
+        x = self.do(self.fc1(x))
+        x = self.do(self.fc2(x))
+        x = self.fc3(x)
+        return x
 
 # Loss function and optimisation
-model = LeNet().to(device)
+# model = LeNet().to(device)
+model = AlexNet().to(device)
 loss_function = nn.CrossEntropyLoss()
 optimiser = optim.SGD(model.parameters(), lr = 0.01)
 
