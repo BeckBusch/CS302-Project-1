@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>793</width>
-    <height>815</height>
+    <height>812</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -24,8 +24,13 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
+    <widget class="QWidget" name="prediction">
+     <attribute name="title">
+      <string>Prediction</string>
+     </attribute>
+    </widget>
     <widget class="QWidget" name="dataSet">
      <attribute name="title">
       <string>DataSet</string>
@@ -91,7 +96,7 @@
        <string>XX Minutes and XX Seconds</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton">
+     <widget class="QPushButton" name="cancelButton">
       <property name="enabled">
        <bool>false</bool>
       </property>
@@ -116,11 +121,6 @@
     <widget class="QWidget" name="training">
      <attribute name="title">
       <string>Training</string>
-     </attribute>
-    </widget>
-    <widget class="QWidget" name="prediction">
-     <attribute name="title">
-      <string>Prediction</string>
      </attribute>
     </widget>
    </widget>

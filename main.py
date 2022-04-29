@@ -5,7 +5,7 @@ import datetime
 import math
 import zipfile
 import wget
-import guiCode
+import guiCode as guiCode
 
 urlLink = "https://www.itl.nist.gov/iaui/vip/cs_links/EMNIST/gzip.zip"
 destination = "gzip.zip"
@@ -41,7 +41,7 @@ def bar_custom(current, total, width=80):
 def emnistDownload():
     global progressCheck
     progressCheck = 0
-    print("check")
+    #print("check")
     wget.download(urlLink, bar=bar_custom)
     
     ui.timeRemainingLabel.setText("Unzipping:")
