@@ -1,11 +1,9 @@
-import torchvision
 from PyQt5 import QtCore, QtGui, QtWidgets
-import time
-import datetime
-import math
-import zipfile
-import wget
-import guiCode as guiCode
+import time, datetime, math
+import zipfile, wget
+import guiCode
+import threading
+import torchvision
 
 urlLink = "https://www.itl.nist.gov/iaui/vip/cs_links/EMNIST/gzip.zip"
 destination = "gzip.zip"
@@ -25,11 +23,11 @@ def bar_custom(current, total, width=80):
         print("calc")
         progressCheck = progress
         timeElasped = time.time() - timeTracker
-        print(timeElasped)
+        #print(timeElasped)
         timeElasped = timeElasped * (100-progress)
-        print(timeElasped)
+        #print(timeElasped)
         timeElasped = math.ceil(timeElasped)
-        print(timeElasped)
+        #print(timeElasped)
         timeTracker = time.time()
         timeString = str(datetime.timedelta(seconds=timeElasped))
 
@@ -38,8 +36,13 @@ def bar_custom(current, total, width=80):
     ui.progressBar.setProperty("value", progress)
     ui.timeRemaininCount.setText(timeString)
 
+
+
 def emnistDownload():
     global progressCheck
+
+    ui.cancelButton.setEnabled(True)
+
     progressCheck = 0
     #print("check")
     wget.download(urlLink, bar=bar_custom)
@@ -56,6 +59,7 @@ def emnistDownload():
 
 
 def guiEdits():
+    ui.cancelButton.clicked.connect(test)
     ui.downloadButton.clicked.connect(emnistDownload)
 
 def test():

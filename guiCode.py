@@ -41,10 +41,10 @@ class Ui_MainWindow(object):
         self.timeRemaininCount = QtWidgets.QLabel(self.dataSet)
         self.timeRemaininCount.setGeometry(QtCore.QRect(120, 210, 141, 16))
         self.timeRemaininCount.setObjectName("timeRemaininCount")
-        self.pushButton = QtWidgets.QPushButton(self.dataSet)
-        self.pushButton.setEnabled(False)
-        self.pushButton.setGeometry(QtCore.QRect(210, 150, 101, 23))
-        self.pushButton.setObjectName("pushButton")
+        self.cancelButton = QtWidgets.QPushButton(self.dataSet)
+        self.cancelButton.setEnabled(False)
+        self.cancelButton.setGeometry(QtCore.QRect(210, 150, 101, 23))
+        self.cancelButton.setObjectName("cancelButton")
         self.tabSwitcher.addTab(self.dataSet, "")
         self.viewDataset = QtWidgets.QWidget()
         self.viewDataset.setObjectName("viewDataset")
@@ -78,11 +78,12 @@ class Ui_MainWindow(object):
         self.downloadButton.setText(_translate("MainWindow", "Begin Download"))
         self.timeRemainingLabel.setText(_translate("MainWindow", "Time Remaininig:"))
         self.timeRemaininCount.setText(_translate("MainWindow", "XX Minutes and XX Seconds"))
-        self.pushButton.setText(_translate("MainWindow", "Cancel Download"))
+        self.cancelButton.setText(_translate("MainWindow", "Cancel Download"))
         self.tabSwitcher.setTabText(self.tabSwitcher.indexOf(self.dataSet), _translate("MainWindow", "DataSet"))
         self.tabSwitcher.setTabText(self.tabSwitcher.indexOf(self.viewDataset), _translate("MainWindow", "View DataSet"))
         self.tabSwitcher.setTabText(self.tabSwitcher.indexOf(self.training), _translate("MainWindow", "Training"))
         self.label.setText(_translate("MainWindow", "Program Status"))
+
 
 if __name__ == "__main__":
     import sys
