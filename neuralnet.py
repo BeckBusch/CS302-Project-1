@@ -17,7 +17,6 @@ print(f"Training MNIST on {device}")
 transform = transforms.Compose(
     [transforms.ToTensor(),
      transforms.Resize(64),
-     transforms.
      transforms.Lambda(lambda y: y.repeat(3, 1, 1))])
 
 # MNIST dataset
@@ -102,6 +101,10 @@ class VGG16(nn.Module):
         self.l6 = nn.Conv2d(256, 256, 3, padding = 1) # x2
         self.l7 = nn.Conv2d(256, 512, 3, padding = 1)
         self.l8 = nn.Conv2d(512, 512, 3, padding = 1) # x5
+        self.bn1 = nn.BatchNorm2d(64)
+        self.bn2 = nn.BatchNorm2d(128)
+        self.bn3 = nn.BatchNorm2d(256)
+        self.bn4 = nn.BatchNorm2d(512)
         self.mp = nn.MaxPool2d(2, stride = 2)
         self.fc1 = nn.Linear(2 * 2 * 512, 256)
         self.fc2 = nn.Linear(256, 256)
@@ -109,31 +112,25 @@ class VGG16(nn.Module):
         self.do = nn.Dropout(p = 0.5)
 
     def forward(self, x):
-        x = torch.relu(self.l1(x))
-        x = torch.relu(self.l2(x))
+        x = self.bn1(torch.relu(self.l1(x)))
+        x = self.bn1(torch.relu(self.l2(x)))
         x = self.mp(x)
-        x = torch.relu(self.l3(x))
-        x = torch.relu(self.l4(x))
+        x = self.bn2(torch.relu(self.l3(x)))
+        x = self.bn2(torch.relu(self.l4(x)))
         x = self.mp(x)
-        x = torch.relu(self.l5(x))
-        x = torch.relu(self.l6(x))
-        x = torch.relu(self.l6(x))
+        x = self.bn3(torch.relu(self.l5(x)))
+        x = self.bn3(torch.relu(self.l6(x)))
+        x = self.bn3(torch.relu(self.l6(x)))
         x = self.mp(x)
-        x = torch.relu(self.l7(x))
-        x = torch.relu(self.l8(x))
-        x = torch.relu(self.l8(x))
-        x = self.mp(x)
-        x = torch.relu(self.l8(x))
-        x = torch.relu(self.l8(x))
-        # # for _ in range(4):
-        # #     if _ == 2:
-        # #         x = self.mp(torch.relu(self.l8(x)))
-        # #     else:
-        # #         x = torch.relu(self.l8(x))
-        x = self.mp(torch.relu(self.l8(x)))
+        x = self.bn4(torch.relu(self.l7(x)))
+        for _ in range(7):
+            if _ == 2 or _ == 6:
+                x = self.mp(x)
+            else:
+                x = self.bn4(torch.relu(self.l8(x)))
         x = x.view(-1, 2 * 2 * 512)
-        x = self.do(self.fc1(x))
-        x = self.do(self.fc2(x))
+        x = self.do(torch.relu(self.fc1(x)))
+        x = self.do(torch.relu(self.fc2(x)))
         x = self.fc3(x)
         return x
 
@@ -164,20 +161,20 @@ def train(epoch):
                 f"({100 * batch / len(training_loader):.0f}%) | Loss: {loss.item():.6f}")
 
 def test():
-    model.eval()
-    testing_loss = 0
-    correct = 0
-    for source, target in testing_loader:
-        source, target = source.to(device), target.to(device)
-        prediction = model(source)
-        _, predicted = torch.max(prediction, 1)
-        testing_loss += loss_function(prediction, target).item()
-        correct += (predicted == target).sum().item()
+    with torch.no_grad():
+        testing_loss = 0
+        correct = 0
+        for source, target in testing_loader:
+            source, target = source.to(device), target.to(device)
+            prediction = model(source)
+            _, predicted = torch.max(prediction, 1)
+            testing_loss += loss_function(prediction, target).item()
+            correct += (predicted == target).sum().item()
 
-    testing_loss /= len(testing_loader)
-    #change this
-    print(f"\nTest Set: Average loss: {testing_loss:.4f}, Accuracy: {correct} / {len(testing_loader.dataset)} "
-          f"({100 * correct / len(testing_loader.dataset):.0f}%)")
+        testing_loss /= len(testing_loader)
+        #change this
+        print(f"\nTest Set: Average loss: {testing_loss:.4f}, Accuracy: {correct} / {len(testing_loader.dataset)} "
+              f"({100 * correct / len(testing_loader.dataset):.2f}%)")
 
 if __name__ == '__main__':
     #torch.backends.cudnn.benchmark = True
