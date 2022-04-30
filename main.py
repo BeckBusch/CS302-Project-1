@@ -23,11 +23,8 @@ def bar_custom(current, total, width=80):
         print("calc")
         progressCheck = progress
         timeElasped = time.time() - timeTracker
-        #print(timeElasped)
         timeElasped = timeElasped * (100-progress)
-        #print(timeElasped)
         timeElasped = math.ceil(timeElasped)
-        #print(timeElasped)
         timeTracker = time.time()
         timeString = str(datetime.timedelta(seconds=timeElasped))
 
@@ -41,7 +38,7 @@ def bar_custom(current, total, width=80):
 def emnistDownload():
     global progressCheck
 
-    ui.cancelButton.setEnabled(True)
+    #ui.cancelButton.setEnabled(True)
 
     progressCheck = 0
     #print("check")
@@ -59,7 +56,7 @@ def emnistDownload():
 
 
 def guiEdits():
-    ui.cancelButton.clicked.connect(test)
+    #ui.cancelButton.clicked.connect(test)
     ui.downloadButton.clicked.connect(emnistDownload)
 
 def test():
