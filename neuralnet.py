@@ -9,6 +9,7 @@ from torch.utils import data
 from torchvision import datasets, transforms
 import time
 import math
+import os
 
 # Training settings
 batch_size = 64
@@ -108,12 +109,16 @@ class VGG11(nn.Module):
         x = self.fc3(x)
         return x
 
+# Loss function
+loss_function = nn.CrossEntropyLoss()
+
 # User input
 model = None
 selected_model = input("Please select one of LeNet, AlexNet or VGG11 to use:")
 if selected_model == "LeNet":
     model = LeNet().to(device)
     transform = transforms.ToTensor()
+    optimiser = optim.SGD(model.parameters(), lr = 5e-3, momentum = 0.9)
 elif selected_model == "AlexNet":
     model = AlexNet().to(device)
 
@@ -121,6 +126,7 @@ elif selected_model == "AlexNet":
     transform = transforms.Compose(
         [transforms.ToTensor(),
          transforms.Resize(99)])
+    optimiser = optim.SGD(model.parameters(), lr = 1e-2, momentum = 0.9)
 elif selected_model == "VGG11":
     model = VGG11().to(device)
 
@@ -129,8 +135,9 @@ elif selected_model == "VGG11":
         [transforms.ToTensor(),
          transforms.Resize(64),
          transforms.Lambda(lambda y: y.repeat(3, 1, 1))])
+    optimiser = optim.SGD(model.parameters(), lr = 1e-4, momentum = 0.9)
 else:
-    input("Invalid model, please select from LeNet, AlexNet, VGG11 only:")
+    print("Invalid model, please select from LeNet, AlexNet, VGG11 only.")
 
 # MNIST dataset
 full_dataset = datasets.MNIST(root = 'mnist_data/',
@@ -146,9 +153,14 @@ training_dataset, testing_dataset = data.random_split(full_dataset, [train_size,
 training_loader = data.DataLoader(training_dataset, batch_size = batch_size, shuffle = True)
 testing_loader = data.DataLoader(testing_dataset, batch_size = batch_size, shuffle = False)
 
-# Loss function and optimisation
-loss_function = nn.CrossEntropyLoss()
-optimiser = optim.SGD(model.parameters(), lr = 1e-3, momentum = 0.9)
+# Import saved model
+import_status = input("Would you like to import a saved model to test on? (y/n): ").lower()
+if import_status == "yes" or import_status == "y":
+    model.load_state_dict(torch.load(os.path.join(os.path.dirname(os.path.abspath(__file__)), "saved_model")))
+elif import_status == "no" or import_status == "n":
+    pass
+else:
+    print("Invalid input")
 
 # Training loop
 def train(epoch):
@@ -195,15 +207,38 @@ if __name__ == '__main__':
     torch.backends.cudnn.benchmark = True
     start_time = time.time()
     for epoch in range(epoch_count):
-        epoch_start = time.time()
-        train(epoch)
-        minutes, seconds = divmod(time.time() - epoch_start, 60)
-        print(f"Time spent training: {minutes:.0f} minutes {seconds:.0f} seconds")
-        epoch_start = time.time()
-        test()
-        minutes, seconds = divmod(time.time() - epoch_start, 60)
-        print(f"Time spent testing: {minutes:.0f} minutes {seconds:.0f} seconds")
-        print("")
+        if import_status == "no" or import_status == "n":
+            epoch_start = time.time()
+            train(epoch)
+            minutes, seconds = divmod(time.time() - epoch_start, 60)
+            print(f"Time spent training: {minutes:.0f} minutes {seconds:.0f} seconds")
+            epoch_start = time.time()
+            test()
+            minutes, seconds = divmod(time.time() - epoch_start, 60)
+            print(f"Time spent testing: {minutes:.0f} minutes {seconds:.0f} seconds")
+            print("")
+        else:
+            epoch_start = time.time()
+            test()
+            minutes, seconds = divmod(time.time() - epoch_start, 60)
+            print(f"Time spent testing: {minutes:.0f} minutes {seconds:.0f} seconds")
+            print("")
+            break
 
     minutes, seconds = divmod(time.time() - start_time, 60)
     print(f"Total time spent testing & training: {minutes:.0f} minutes {seconds:.0f} seconds")
+
+# Save the trained model if desired
+def save_model(save_state):     
+
+    if save_state == "yes" or save_state == "y":
+        torch.save(model.state_dict(), os.path.join(os.path.dirname(os.path.abspath(__file__)), "saved_model"))
+    elif save_state == "no" or save_state == "n":
+        print("Okay, see you next time :)")
+    else:
+        save_state = input("Please input yes or no (y/n): )")
+        save_model(save_state)
+
+save_state = input("Do you wish to save this model? y/n: ").lower()
+save_model(save_state)
+
