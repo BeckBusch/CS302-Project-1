@@ -12,11 +12,11 @@ import math
 import os
 
 # Training settings
-batch_size = 64
+batch_size = 128
 epoch_count = 5
 train_ratio = 0.7
 device = 'cuda:0' if cuda.is_available() else 'cpu'
-print(f"Training MNIST on {device}")
+print(f"Training EMNIST on {device}")
 
 # LeNet-5 Model
 class LeNet(nn.Module):
@@ -28,7 +28,7 @@ class LeNet(nn.Module):
         self.mp = nn.MaxPool2d(2, stride = 2)
         self.fc1 = nn.Linear(16 * 5 * 5, 120)
         self.fc2 = nn.Linear(120, 84)
-        self.fc3 = nn.Linear(84, 10)
+        self.fc3 = nn.Linear(84, 62)
 
     def forward(self, x):
         x = torch.relu(self.l1(x))
@@ -138,9 +138,11 @@ elif selected_model == "VGG11":
     optimiser = optim.SGD(model.parameters(), lr = 5e-4, momentum = 0.9)
 else:
     print("Invalid model, please select from LeNet, AlexNet, VGG11 only.")
+    exit()
 
 # MNIST dataset
-full_dataset = datasets.MNIST(root = 'mnist_data/',
+full_dataset = datasets.EMNIST(root = 'emnist_data/',
+                         split = 'byclass',
                          train = True, 
                          transform = transform,
                          download = True)
@@ -178,10 +180,10 @@ def train(epoch):
         optimiser.step()
 
         # Print statements with lots of formatting
-        if batch % 10 == 0:
+        if batch % 50 == 0:
             print(f"Train epoch: {epoch + 1} | Batch status: ",
                   f"{batch * len(source)}/{len(training_loader.dataset)} ".rjust(math.ceil(math.log(train_size)) + 1),
-                  f"({100 * batch / len(training_loader):.0f}%)".rjust(5),
+                  f"({100 * batch / len(training_loader):.0f}%)".rjust(6),
                   f" | Loss: {loss.item():.6f}") 
 
 # Testing loop
