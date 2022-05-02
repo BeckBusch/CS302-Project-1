@@ -135,7 +135,7 @@ elif selected_model == "VGG11":
         [transforms.ToTensor(),
          transforms.Resize(64),
          transforms.Lambda(lambda y: y.repeat(3, 1, 1))])
-    optimiser = optim.SGD(model.parameters(), lr = 1e-4, momentum = 0.9)
+    optimiser = optim.SGD(model.parameters(), lr = 5e-4, momentum = 0.9)
 else:
     print("Invalid model, please select from LeNet, AlexNet, VGG11 only.")
 
