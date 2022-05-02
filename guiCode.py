@@ -17,14 +17,35 @@ class Ui_MainWindow(object):
         MainWindow.resize(793, 812)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
+
+
         self.tabSwitcher = QtWidgets.QTabWidget(self.centralwidget)
         self.tabSwitcher.setGeometry(QtCore.QRect(0, 0, 791, 551))
         self.tabSwitcher.setObjectName("tabSwitcher")
         self.prediction = QtWidgets.QWidget()
         self.prediction.setObjectName("prediction")
+
+        self.clearCanvaButton = QtWidgets.QPushButton(self.prediction)
+        self.clearCanvaButton.setGeometry(QtCore.QRect(20, 320, 81, 23))
+        self.clearCanvaButton.setObjectName("clearCanvaButton")
+        self.submitCanvasButton = QtWidgets.QPushButton(self.prediction)
+        self.submitCanvasButton.setGeometry(QtCore.QRect(144, 320, 131, 23))
+        self.submitCanvasButton.setObjectName("submitCanvasButton")
+
+        
+
+        self.canvasLabel = QtWidgets.QLabel(self.prediction)
+        self.canvasLabel.setMouseTracking(True)
+        self.canvasLabel.setGeometry(QtCore.QRect(20, 60, 250, 250))
+
+        canvas = QtGui.QPixmap(250, 250)
+        canvas.fill(QtGui.QColor("white"))
+        self.canvasLabel.setPixmap(canvas)
+
         self.tabSwitcher.addTab(self.prediction, "")
         self.dataSet = QtWidgets.QWidget()
         self.dataSet.setObjectName("dataSet")
+
         self.downloadButton = QtWidgets.QPushButton(self.dataSet)
         self.downloadButton.setGeometry(QtCore.QRect(30, 150, 101, 23))
         self.downloadButton.setObjectName("downloadButton")
@@ -114,12 +135,26 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MainWindow)
-        self.tabSwitcher.setCurrentIndex(1)
+        self.tabSwitcher.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+
+    def mouseMoveEvent(self, e):
+        print("test")
+        painter = QtGui.QPainter(self.canvasLabel.pixmap())
+        pen = QtGui.QPen()
+        pen.setColor(QtGui.QColor("#376F9F"))
+        painter.setPen(pen)
+        painter.drawPoint(e.x(), e.y())
+        painter.end()
+        self.update()
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        self.clearCanvaButton.setText(_translate("MainWindow", "Clear Canvas"))
+        self.submitCanvasButton.setText(_translate("MainWindow", "Submit Drawing"))
+        #self.canvasLabel.setText(_translate("MainWindow", "TextLabel"))
         self.tabSwitcher.setTabText(self.tabSwitcher.indexOf(self.prediction), _translate("MainWindow", "Prediction"))
         self.downloadButton.setText(_translate("MainWindow", "Begin Download"))
         self.timeRemainingLabel.setText(_translate("MainWindow", "Time Remaininig:"))
@@ -127,9 +162,9 @@ class Ui_MainWindow(object):
         self.cancelButton.setText(_translate("MainWindow", "Cancel Download"))
         self.tabSwitcher.setTabText(self.tabSwitcher.indexOf(self.dataSet), _translate("MainWindow", "DataSet"))
         self.tabSwitcher.setTabText(self.tabSwitcher.indexOf(self.viewDataset), _translate("MainWindow", "View DataSet"))
-        self.modelSelector.setItemText(0, _translate("MainWindow", "Model 1"))
-        self.modelSelector.setItemText(1, _translate("MainWindow", "Model 2"))
-        self.modelSelector.setItemText(2, _translate("MainWindow", "Model 3"))
+        self.modelSelector.setItemText(0, _translate("MainWindow", "LeNet"))
+        self.modelSelector.setItemText(1, _translate("MainWindow", "AlexNet"))
+        self.modelSelector.setItemText(2, _translate("MainWindow", "VGG11"))
         self.DatasetSelector.setItemText(0, _translate("MainWindow", "EMNIST"))
         self.label_2.setText(_translate("MainWindow", "Training Dataset:"))
         self.label_3.setText(_translate("MainWindow", "Dataset:"))

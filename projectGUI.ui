@@ -30,6 +30,45 @@
      <attribute name="title">
       <string>Prediction</string>
      </attribute>
+     <widget class="QPushButton" name="clearCanvaButton">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>320</y>
+        <width>81</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Clear Canvas</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="submitCanvasButton">
+      <property name="geometry">
+       <rect>
+        <x>144</x>
+        <y>320</y>
+        <width>131</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Submit Drawing</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="canvasLabel">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>60</y>
+        <width>250</width>
+        <height>250</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>TextLabel</string>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="dataSet">
      <attribute name="title">
