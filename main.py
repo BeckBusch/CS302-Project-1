@@ -12,6 +12,8 @@ progressCheck = 0
 timeTracker = 0
 timeString = ""
 
+rowCount = 50
+
 def bar_custom(current, total, width=80):
     global progressCheck, timeTracker, timeString
     timeElasped = 0
@@ -33,7 +35,11 @@ def bar_custom(current, total, width=80):
     ui.progressBar.setProperty("value", progress)
     ui.timeRemaininCount.setText(timeString)
 
-
+def update_pos():
+    print(ui.tableWidget.verticalScrollBar().value())
+    # ui.tableWidget.setCellWidget(0, 0, ui.testWidget2)
+    ui.tableWidget.setCellWidget(ui.tableWidget.verticalScrollBar().value(), 4, ui.testWidget)
+    # ui.tableWidget.update()
 
 def emnistDownload():
     global progressCheck
@@ -58,10 +64,10 @@ def emnistDownload():
 def guiEdits():
     #ui.cancelButton.clicked.connect(test)
     ui.downloadButton.clicked.connect(emnistDownload)
+    ui.tableWidget.verticalScrollBar().valueChanged.connect(update_pos)
 
 def test():
-    print("pogdfgf")
-    ui.downloadButton.setText("tstst")
+    print("no")
 
 if __name__ == "__main__":
     import sys

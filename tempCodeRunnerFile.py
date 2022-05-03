@@ -1,0 +1,1 @@
+    ui.tableWidget.update()
