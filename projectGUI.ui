@@ -61,102 +61,209 @@
        <rect>
         <x>20</x>
         <y>60</y>
-        <width>250</width>
+        <width>254</width>
         <height>250</height>
        </rect>
       </property>
+      <property name="frameShape">
+       <enum>QFrame::Box</enum>
+      </property>
+      <property name="lineWidth">
+       <number>2</number>
+      </property>
       <property name="text">
-       <string>TextLabel</string>
+       <string/>
       </property>
      </widget>
      <widget class="QTextBrowser" name="textBrowser_2">
       <property name="geometry">
        <rect>
         <x>290</x>
-        <y>170</y>
+        <y>200</y>
         <width>191</width>
-        <height>171</height>
+        <height>141</height>
        </rect>
       </property>
      </widget>
-     <widget class="QTextBrowser" name="textBrowser_3">
+     <widget class="QLabel" name="picture">
+      <property name="geometry">
+       <rect>
+        <x>290</x>
+        <y>80</y>
+        <width>41</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Box</enum>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="pixmap">
+       <pixmap>Images/sevenPicture.png</pixmap>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="picture_2">
+      <property name="geometry">
+       <rect>
+        <x>340</x>
+        <y>80</y>
+        <width>41</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Box</enum>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="pixmap">
+       <pixmap>Images/bPicture.png</pixmap>
+      </property>
+     </widget>
+     <widget class="QLabel" name="picture_3">
+      <property name="geometry">
+       <rect>
+        <x>390</x>
+        <y>80</y>
+        <width>41</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Box</enum>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="pixmap">
+       <pixmap>Images/qPicture.png</pixmap>
+      </property>
+     </widget>
+     <widget class="QLabel" name="picture_4">
+      <property name="geometry">
+       <rect>
+        <x>440</x>
+        <y>80</y>
+        <width>41</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Box</enum>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="pixmap">
+       <pixmap>Images/mPicture.png</pixmap>
+      </property>
+     </widget>
+     <widget class="QLabel" name="picture_5">
+      <property name="geometry">
+       <rect>
+        <x>290</x>
+        <y>130</y>
+        <width>41</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Box</enum>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="pixmap">
+       <pixmap>Images/sPicture.png</pixmap>
+      </property>
+     </widget>
+     <widget class="QLabel" name="picture_6">
+      <property name="geometry">
+       <rect>
+        <x>340</x>
+        <y>130</y>
+        <width>41</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Box</enum>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="pixmap">
+       <pixmap>Images/sixPicture.png</pixmap>
+      </property>
+     </widget>
+     <widget class="QLabel" name="picture_7">
+      <property name="geometry">
+       <rect>
+        <x>390</x>
+        <y>130</y>
+        <width>41</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Box</enum>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="pixmap">
+       <pixmap>Images/fourPicture.png</pixmap>
+      </property>
+     </widget>
+     <widget class="QLabel" name="picture_8">
+      <property name="geometry">
+       <rect>
+        <x>440</x>
+        <y>130</y>
+        <width>41</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Box</enum>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="pixmap">
+       <pixmap>Images/tPicture.png</pixmap>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_6">
       <property name="geometry">
        <rect>
         <x>290</x>
         <y>60</y>
-        <width>41</width>
-        <height>41</height>
+        <width>61</width>
+        <height>16</height>
        </rect>
       </property>
-     </widget>
-     <widget class="QTextBrowser" name="textBrowser_4">
-      <property name="geometry">
-       <rect>
-        <x>440</x>
-        <y>60</y>
-        <width>41</width>
-        <height>41</height>
-       </rect>
+      <property name="text">
+       <string>Examples:</string>
       </property>
      </widget>
-     <widget class="QTextBrowser" name="textBrowser_5">
-      <property name="geometry">
-       <rect>
-        <x>390</x>
-        <y>60</y>
-        <width>41</width>
-        <height>41</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QTextBrowser" name="textBrowser_6">
-      <property name="geometry">
-       <rect>
-        <x>340</x>
-        <y>60</y>
-        <width>41</width>
-        <height>41</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QTextBrowser" name="textBrowser_7">
+     <widget class="QLabel" name="label_7">
       <property name="geometry">
        <rect>
         <x>290</x>
-        <y>110</y>
-        <width>41</width>
-        <height>41</height>
+        <y>180</y>
+        <width>61</width>
+        <height>16</height>
        </rect>
       </property>
-     </widget>
-     <widget class="QTextBrowser" name="textBrowser_8">
-      <property name="geometry">
-       <rect>
-        <x>340</x>
-        <y>110</y>
-        <width>41</width>
-        <height>41</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QTextBrowser" name="textBrowser_9">
-      <property name="geometry">
-       <rect>
-        <x>390</x>
-        <y>110</y>
-        <width>41</width>
-        <height>41</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QTextBrowser" name="textBrowser_10">
-      <property name="geometry">
-       <rect>
-        <x>440</x>
-        <y>110</y>
-        <width>41</width>
-        <height>41</height>
-       </rect>
+      <property name="text">
+       <string>Predictions:</string>
       </property>
      </widget>
     </widget>

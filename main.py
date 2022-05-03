@@ -4,6 +4,7 @@ import zipfile, wget
 import guiCode
 import threading
 import torchvision
+import numpy as np
 
 urlLink = "https://www.itl.nist.gov/iaui/vip/cs_links/EMNIST/gzip.zip"
 destination = "gzip.zip"
@@ -11,6 +12,10 @@ destination = "gzip.zip"
 progressCheck = 0
 timeTracker = 0
 timeString = ""
+
+last_x = None
+last_y = None
+paintCanvas = None
 
 def bar_custom(current, total, width=80):
     global progressCheck, timeTracker, timeString
@@ -30,7 +35,6 @@ def bar_custom(current, total, width=80):
     ui.progressBar.setProperty("value", progress)
     ui.timeRemaininCount.setText(timeString)
 
-
 def emnistDownload():
     global progressCheck
 
@@ -49,32 +53,51 @@ def emnistDownload():
         ui.progressBar.setProperty("value", progress)
         zf.extract(file)
 
+def cancelDownload():
+    pass
 
 def clearCanvas():
-    ui.canvas.fill(QtGui.QColor("white"))
+    paintCanvas.fill(QtGui.QColor("white"))
+    ui.canvasLabel.setPixmap(paintCanvas)
 
-def guiEdits():
-    #ui.cancelButton.clicked.connect(test)
-    ui.downloadButton.clicked.connect(emnistDownload)
-    ui.clearCanvaButton.clicked.connect(clearCanvas)
+def painting(e):
+    global last_x, last_y
 
-    ui.canvasLabel = QtWidgets.QLabel(ui.prediction)
+    if last_x is None:
+        last_x = e.x()
+        last_y = e.y()
+        return
     
-    #ui.canvasLabel.setMouseTracking(True)
-    ui.canvasLabel.setGeometry(QtCore.QRect(20, 60, 250, 250))
+    painter = QtGui.QPainter(paintCanvas)
+    p = painter.pen()
+    p.setWidth(16)
+    p.setColor(QtGui.QColor("black"))
+    painter.setPen(p)
+    #painter.drawLine(last_x+580, last_y+220, e.x()+580, e.y()+220)
+    painter.drawLine(last_x, last_y, e.x(), e.y())
+    painter.end()
+    ui.canvasLabel.setPixmap(paintCanvas)
 
-    ui.canvas = QtGui.QPixmap(250, 250)
-    ui.canvas.fill(QtGui.QColor("blue"))
-    ui.canvasLabel.setPixmap(ui.canvas)
+    # Update the origin for next time.
+    last_x = e.x()
+    last_y = e.y()
 
-    ui.canvasLabel.mouseMoveEvent = test
+def mouseRel(e):
+    global last_x, last_y
+    last_x = None
+    last_y = None
 
+def saveImage():
+    print("test")
+    channels_count = 4
+    image = paintCanvas.toImage()
+    image.save(r'tmp.png')
 
 def test(e):
-    print("pogdfgf")
-    print(e)
-    ui.downloadButton.setText("tstst")
-    print(QtGui.QCursor.pos())
+    pass
+    #print("pogdfgf")
+    #print(e)
+    #ui.downloadButton.setText("tstst")
 
 if __name__ == "__main__":
     import sys
@@ -82,7 +105,20 @@ if __name__ == "__main__":
     MainWindow = QtWidgets.QMainWindow()
     ui = guiCode.Ui_MainWindow()
     ui.setupUi(MainWindow)
-    guiEdits()
+
+    ui.downloadButton.clicked.connect(emnistDownload)
+    ui.clearCanvaButton.clicked.connect(clearCanvas)
+    ui.submitCanvasButton.clicked.connect(saveImage)
+
+    #ui.canvasLabel = QtWidgets.QLabel(ui.prediction)
+    #   ui.canvasLabel.setGeometry(QtCore.QRect(20, 60, 250, 250))
+    paintCanvas = QtGui.QPixmap(250, 250)
+    paintCanvas.fill(QtGui.QColor("white"))
+    ui.canvasLabel.setPixmap(paintCanvas)
+    ui.canvasLabel.mouseMoveEvent = painting
+    ui.canvasLabel.mouseReleaseEvent = mouseRel
+    
     MainWindow.show()
+    MainWindow.update()
     sys.exit(app.exec_())
 
