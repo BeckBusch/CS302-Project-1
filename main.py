@@ -1,10 +1,14 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtGui, QtWidgets
 import time, datetime, math
 import zipfile, wget
 import guiCode
-import threading
 import torchvision
+from PyQt5.QtCore import Qt
+from torchvision import transforms
+import idx2numpy
 import numpy as np
+from PIL import Image
+from PIL.ImageQt import ImageQt
 
 urlLink = "https://www.itl.nist.gov/iaui/vip/cs_links/EMNIST/gzip.zip"
 destination = "gzip.zip"
@@ -17,10 +21,23 @@ last_x = None
 last_y = None
 paintCanvas = None
 
+rowCount = 50
+prev = 0
+
+image_array = []
+
+def train_picture_list():
+    pictureFolder = "C:\\Users\\Samuel Mason\\Downloads\\Leaf\\"
+    image = 'emnist-byclass-test-images-idx3-ubyte'
+    image_array = idx2numpy.convert_from_file(pictureFolder + image)
+    ui.tableWidget.setRowCount(math.floor(len(image_array) / 2))
+    return image_array
+
+
 def bar_custom(current, total, width=80):
     global progressCheck, timeTracker, timeString
     timeElasped = 0
-    
+
     progress = math.ceil((current/total) * 100)
 
     if (progress != progressCheck):
@@ -40,7 +57,6 @@ def emnistDownload():
 
     #ui.cancelButton.setEnabled(True)
     progressCheck = 0
-    #print("check")
     wget.download(urlLink, bar=bar_custom)
     
     ui.timeRemainingLabel.setText("Unzipping:")
@@ -99,6 +115,38 @@ def test(e):
     #print(e)
     #ui.downloadButton.setText("tstst")
 
+def update_pos():
+    global prev
+    pos = ui.tableWidget.verticalScrollBar().value()
+    for i in range(14):
+        if pos > prev:
+            for j in range(abs(pos - prev)):
+                ui.tableWidget.removeCellWidget(pos - j - 1, i)
+        else:
+            for j in range(abs(pos - prev)):
+                ui.tableWidget.removeCellWidget(prev + 15 - j - 1, i)
+
+    for i in range(14):
+        for j in range(9):
+
+            transform=torchvision.transforms.Compose([
+                lambda x: transforms.functional.rotate(x, -90),
+                lambda x: transforms.functional.hflip(x),
+                ])
+            
+            PIL_image = Image.fromarray(image_array[pos + j + 9 * i].astype('uint8'), 'L')
+            PIL_image = transform(PIL_image)
+            qim = ImageQt(PIL_image)
+
+            qpix = QtGui.QPixmap.fromImage(qim)
+            qpix = qpix.scaled(45, 45, Qt.KeepAspectRatio, Qt.FastTransformation)
+            label = QtWidgets.QLabel("")
+            label.setPixmap(qpix)
+            ui.tableWidget.setCellWidget(pos + j, i, label)
+
+    prev = pos
+
+
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
@@ -109,6 +157,7 @@ if __name__ == "__main__":
     ui.downloadButton.clicked.connect(emnistDownload)
     ui.clearCanvaButton.clicked.connect(clearCanvas)
     ui.submitCanvasButton.clicked.connect(saveImage)
+    ui.tableWidget.verticalScrollBar().valueChanged.connect(update_pos)
 
     #ui.canvasLabel = QtWidgets.QLabel(ui.prediction)
     #   ui.canvasLabel.setGeometry(QtCore.QRect(20, 60, 250, 250))
