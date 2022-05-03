@@ -24,10 +24,10 @@ paintCanvas = None
 rowCount = 50
 prev = 0
 
-image_array = []
+image_array = []        
 
 def train_picture_list():
-    pictureFolder = "C:\\Users\\Samuel Mason\\Downloads\\Leaf\\"
+    pictureFolder = "C:\\Users\\GGPC\\Downloads\\thing\\"
     image = 'emnist-byclass-test-images-idx3-ubyte'
     image_array = idx2numpy.convert_from_file(pictureFolder + image)
     ui.tableWidget.setRowCount(math.floor(len(image_array) / 2))
@@ -153,11 +153,14 @@ if __name__ == "__main__":
     MainWindow = QtWidgets.QMainWindow()
     ui = guiCode.Ui_MainWindow()
     ui.setupUi(MainWindow)
+    image_array = train_picture_list()
+    update_pos()
 
     ui.downloadButton.clicked.connect(emnistDownload)
     ui.clearCanvaButton.clicked.connect(clearCanvas)
     ui.submitCanvasButton.clicked.connect(saveImage)
     ui.tableWidget.verticalScrollBar().valueChanged.connect(update_pos)
+   
 
     #ui.canvasLabel = QtWidgets.QLabel(ui.prediction)
     #   ui.canvasLabel.setGeometry(QtCore.QRect(20, 60, 250, 250))
@@ -170,4 +173,3 @@ if __name__ == "__main__":
     MainWindow.show()
     MainWindow.update()
     sys.exit(app.exec_())
-

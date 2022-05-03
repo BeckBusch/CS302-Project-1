@@ -9,6 +9,8 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import Qt
+import math
 
 
 class Ui_MainWindow(object):
@@ -22,6 +24,7 @@ class Ui_MainWindow(object):
         self.tabSwitcher.setObjectName("tabSwitcher")
         self.prediction = QtWidgets.QWidget()
         self.prediction.setObjectName("prediction")
+
         self.clearCanvaButton = QtWidgets.QPushButton(self.prediction)
         self.clearCanvaButton.setGeometry(QtCore.QRect(20, 320, 81, 23))
         self.clearCanvaButton.setObjectName("clearCanvaButton")
@@ -92,6 +95,8 @@ class Ui_MainWindow(object):
         self.label_7 = QtWidgets.QLabel(self.prediction)
         self.label_7.setGeometry(QtCore.QRect(290, 180, 61, 16))
         self.label_7.setObjectName("label_7")
+
+
         self.tabSwitcher.addTab(self.prediction, "")
         self.dataSet = QtWidgets.QWidget()
         self.dataSet.setObjectName("dataSet")
@@ -115,10 +120,102 @@ class Ui_MainWindow(object):
         self.cancelButton.setEnabled(False)
         self.cancelButton.setGeometry(QtCore.QRect(220, 150, 101, 23))
         self.cancelButton.setObjectName("cancelButton")
+
         self.tabSwitcher.addTab(self.dataSet, "")
         self.viewDataset = QtWidgets.QWidget()
         self.viewDataset.setObjectName("viewDataset")
         self.tabSwitcher.addTab(self.viewDataset, "")
+
+        self.viewDataset.layout = QtWidgets.QVBoxLayout()
+
+        self.inputLine = QtWidgets.QLineEdit()
+
+        self.searchBar = QtWidgets.QHBoxLayout()
+        self.searchBar.addStretch(1)
+        self.searchBar.addWidget(self.inputLine)
+
+        self.viewDataset.layout.addLayout(self.searchBar)
+        self.scrollArea = QtWidgets.QScrollArea(widgetResizable = True)
+
+        # self.vertScrollBar.setValue(100)
+
+        # self.scrollArea.setMouseTracking(True)
+        # self.scrollArea.horizontalScrollBar().setEnabled(False)
+
+
+        self.tableWidget = QtWidgets.QTableWidget()
+        self.tableWidget.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        self.tableWidget.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+
+        self.tableWidget.setRowCount(9)
+        self.tableWidget.setColumnCount(14)
+
+        self.tableWidget.verticalHeader().setDefaultSectionSize(50)
+        self.tableWidget.horizontalHeader().setDefaultSectionSize(50)
+
+
+        # self.pic = QtGui.QPixmap("C:\\Users\\Samuel Mason\\Downloads\\28pix.png")
+        # self.pic = QtGui.QPixmap("C:\\Users\\Samuel Mason\\Downloads\\28pix2.png")
+        # self.testWidget = QtWidgets.QPushButton()
+
+###############
+        # self.pictureFolder = "C:\\Users\\Samuel Mason\\Downloads\\Leaf\\"
+        # self.pictureList = []
+
+        # for images in os.listdir(self.pictureFolder):
+        #     self.pictureList.append(images)
+
+        # for i in range(2):
+        #     print(self.pictureList[i])
+
+        # for i in range(7):
+        #     for j in range(15):
+
+        #         self.this_image = self.pictureList[i + j]
+        #         self.pic = QtGui.QPixmap(self.pictureFolder + self.this_image)
+        #         self.label = QtWidgets.QLabel("test")
+        #         self.label.setPixmap(self.pic)
+        #         self.tableWidget.setCellWidget(j, i, self.label)
+                          
+
+        self.scrollArea.setWidget(self.tableWidget)
+
+        # self.scrollZone.setWidget(self.scrollArea)
+
+        self.viewDataset.setLayout(self.viewDataset.layout)
+
+        self.viewDataset.layout.addWidget(self.scrollArea)
+
+
+
+
+
+        # image_contents_widget = QtWidgets.QWidget()
+        # self.scrollArea.setWidget(image_contents_widget)
+        # self.page_layout = QtWidgets.QVBoxLayout(image_contents_widget)
+
+
+        # contents_width = self.scrollArea.frameGeometry().width()
+        # contents_height = self.scrollArea.frameGeometry().height()
+
+        # self.tableWidget = QtGui.QTableWidget()
+
+        # column_count = math.floor(contents_width / 28)
+        # row_count = math.floor(814255 / column_count) + 1
+
+        # self.tableWidget.setRowCount(row_count)
+        # self.tableWidget.setColumnCount(column_count)
+
+        # for image in os.listdir(DIRECTORY):
+        #     pixmap = QtGui.QPixmap(os.path.join(DIRECTORY, file location))
+        #     if not pixmap.isNull():
+        #         label = QtGui.QLabel(pixmap = pixmap)
+        #         page_layout.addWidget(label)
+
+        # width / image_size (floor) = images horiz
+        # height / image_size (floor) = images vert
+
+
         self.training = QtWidgets.QWidget()
         self.training.setObjectName("training")
         self.modelSelector = QtWidgets.QComboBox(self.training)
