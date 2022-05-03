@@ -5,8 +5,12 @@ import zipfile, wget
 import guiCode
 import threading
 import torchvision
+from torchvision import transforms
 import os
 import idx2numpy
+import numpy as np
+from PIL import Image
+from PIL.ImageQt import ImageQt
 
 urlLink = "https://www.itl.nist.gov/iaui/vip/cs_links/EMNIST/gzip.zip"
 destination = "gzip.zip"
@@ -22,7 +26,7 @@ image_array = []
 
 def train_picture_list():
     pictureFolder = "C:\\Users\\Samuel Mason\\Downloads\\Leaf\\"
-    image = 'train-images-idx3-ubyte'
+    image = 'emnist-byclass-test-images-idx3-ubyte'
     image_array = idx2numpy.convert_from_file(pictureFolder + image)
 
     return image_array
@@ -62,12 +66,18 @@ def update_pos():
                 ui.tableWidget.removeCellWidget(prev + 15 - j - 1, i)
 
     for i in range(14):
-        for j in range(15):
+        for j in range(9):
 
-            height, width = 28, 28#image_array[i + j].shape
-            bytesPerLine = 1 * width
-            q_image = QtGui.QImage(image_array[pos + i * j + i + j].data, width, height, bytesPerLine, QtGui.QImage.Format_Grayscale8)
-            qpix = QtGui.QPixmap(q_image)
+            transform=torchvision.transforms.Compose([
+                lambda x: transforms.functional.rotate(x, -90),
+                lambda x: transforms.functional.hflip(x),
+                ])
+            
+            PIL_image = Image.fromarray(image_array[pos + j + 9 * i].astype('uint8'), 'L')
+            PIL_image = transform(PIL_image)
+            qim = ImageQt(PIL_image)
+
+            qpix = QtGui.QPixmap.fromImage(qim)
             qpix = qpix.scaled(45, 45, Qt.KeepAspectRatio, Qt.FastTransformation)
             label = QtWidgets.QLabel("")
             label.setPixmap(qpix)
