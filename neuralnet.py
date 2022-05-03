@@ -7,16 +7,17 @@ import torch
 from torch import nn, optim, cuda
 from torch.utils import data
 from torchvision import datasets, transforms
+from PIL import Image
 import time
 import math
 import os
 
 # Training settings
-batch_size = 64
-epoch_count = 5
+batch_size = 128
+epoch_count = 1
 train_ratio = 0.7
 device = 'cuda:0' if cuda.is_available() else 'cpu'
-print(f"Training MNIST on {device}")
+print(f"Training EMNIST on {device}")
 
 # LeNet-5 Model
 class LeNet(nn.Module):
@@ -28,7 +29,7 @@ class LeNet(nn.Module):
         self.mp = nn.MaxPool2d(2, stride = 2)
         self.fc1 = nn.Linear(16 * 5 * 5, 120)
         self.fc2 = nn.Linear(120, 84)
-        self.fc3 = nn.Linear(84, 10)
+        self.fc3 = nn.Linear(84, 62)
 
     def forward(self, x):
         x = torch.relu(self.l1(x))
@@ -117,30 +118,39 @@ model = None
 selected_model = input("Please select one of LeNet, AlexNet or VGG11 to use:")
 if selected_model == "LeNet":
     model = LeNet().to(device)
-    transform = transforms.ToTensor()
+    transform = transforms.Compose([
+                transforms.ToTensor(),
+                lambda x: transforms.functional.rotate(x, -90),
+                lambda x: transforms.functional.hflip(x)])
     optimiser = optim.SGD(model.parameters(), lr = 5e-3, momentum = 0.9)
 elif selected_model == "AlexNet":
     model = AlexNet().to(device)
 
     # Resize the images
-    transform = transforms.Compose(
-        [transforms.ToTensor(),
-         transforms.Resize(99)])
+    transform = transforms.Compose([
+                transforms.ToTensor(),
+                lambda x: transforms.functional.rotate(x, -90),
+                lambda x: transforms.functional.hflip(x),
+                transforms.Resize(99)])
     optimiser = optim.SGD(model.parameters(), lr = 1e-2, momentum = 0.9)
 elif selected_model == "VGG11":
     model = VGG11().to(device)
 
     # Resize the images and change to 3-channel (rgb)
-    transform = transforms.Compose(
-        [transforms.ToTensor(),
-         transforms.Resize(64),
-         transforms.Lambda(lambda y: y.repeat(3, 1, 1))])
+    transform = transforms.Compose([
+                transforms.ToTensor(),
+                lambda x: transforms.functional.rotate(x, -90),
+                lambda x: transforms.functional.hflip(x),
+                transforms.Resize(64),
+                transforms.Lambda(lambda y: y.repeat(3, 1, 1))])
     optimiser = optim.SGD(model.parameters(), lr = 5e-4, momentum = 0.9)
 else:
     print("Invalid model, please select from LeNet, AlexNet, VGG11 only.")
+    exit()
 
 # MNIST dataset
-full_dataset = datasets.MNIST(root = 'mnist_data/',
+full_dataset = datasets.EMNIST(root = 'emnist_data/',
+                         split = 'byclass',
                          train = True, 
                          transform = transform,
                          download = True)
@@ -178,10 +188,10 @@ def train(epoch):
         optimiser.step()
 
         # Print statements with lots of formatting
-        if batch % 10 == 0:
+        if batch % 50 == 0:
             print(f"Train epoch: {epoch + 1} | Batch status: ",
                   f"{batch * len(source)}/{len(training_loader.dataset)} ".rjust(math.ceil(math.log(train_size)) + 1),
-                  f"({100 * batch / len(training_loader):.0f}%)".rjust(5),
+                  f"({100 * batch / len(training_loader):.0f}%)".rjust(6),
                   f" | Loss: {loss.item():.6f}") 
 
 # Testing loop
@@ -227,6 +237,16 @@ if __name__ == '__main__':
 
     minutes, seconds = divmod(time.time() - start_time, 60)
     print(f"Total time spent testing & training: {minutes:.0f} minutes {seconds:.0f} seconds")
+
+# Get prediction for a character
+def predict_character():
+    model.load_state_dict(torch.load(os.path.join(os.path.dirname(os.path.abspath(__file__)), "saved_model")))
+    image = Image.open("testimg.jpg")
+    transform = transforms.Compose([
+                transforms.ToTensor(),
+                transforms.Resize(28)])
+    image = transform(image)
+    test()
 
 # Save the trained model if desired
 def save_model(save_state):     
