@@ -117,24 +117,31 @@ model = None
 selected_model = input("Please select one of LeNet, AlexNet or VGG11 to use:")
 if selected_model == "LeNet":
     model = LeNet().to(device)
-    transform = transforms.ToTensor()
+    transform = transforms.Compose([
+                transforms.ToTensor(),
+                lambda x: transforms.functional.rotate(x, -90),
+                lambda x: transforms.functional.hflip(x)])
     optimiser = optim.SGD(model.parameters(), lr = 5e-3, momentum = 0.9)
 elif selected_model == "AlexNet":
     model = AlexNet().to(device)
 
     # Resize the images
-    transform = transforms.Compose(
-        [transforms.ToTensor(),
-         transforms.Resize(99)])
+    transform = transforms.Compose([
+                transforms.ToTensor(),
+                lambda x: transforms.functional.rotate(x, -90),
+                lambda x: transforms.functional.hflip(x),
+                transforms.Resize(99)])
     optimiser = optim.SGD(model.parameters(), lr = 1e-2, momentum = 0.9)
 elif selected_model == "VGG11":
     model = VGG11().to(device)
 
     # Resize the images and change to 3-channel (rgb)
-    transform = transforms.Compose(
-        [transforms.ToTensor(),
-         transforms.Resize(64),
-         transforms.Lambda(lambda y: y.repeat(3, 1, 1))])
+    transform = transforms.Compose([
+                transforms.ToTensor(),
+                lambda x: transforms.functional.rotate(x, -90),
+                lambda x: transforms.functional.hflip(x),
+                transforms.Resize(64),
+                transforms.Lambda(lambda y: y.repeat(3, 1, 1))])
     optimiser = optim.SGD(model.parameters(), lr = 5e-4, momentum = 0.9)
 else:
     print("Invalid model, please select from LeNet, AlexNet, VGG11 only.")
