@@ -28,7 +28,7 @@ def train_picture_list():
     pictureFolder = "C:\\Users\\Samuel Mason\\Downloads\\Leaf\\"
     image = 'emnist-byclass-test-images-idx3-ubyte'
     image_array = idx2numpy.convert_from_file(pictureFolder + image)
-
+    ui.tableWidget.setRowCount(math.floor(len(image_array) / 2))
     return image_array
 
 def bar_custom(current, total, width=80):
@@ -56,7 +56,6 @@ def update_pos():
 
     global prev
     pos = ui.tableWidget.verticalScrollBar().value()
-    print(pos)
     for i in range(14):
         if pos > prev:
             for j in range(abs(pos - prev)):
@@ -119,6 +118,7 @@ if __name__ == "__main__":
     ui = guiCode.Ui_MainWindow()
     ui.setupUi(MainWindow)
     image_array = train_picture_list()
+    update_pos()
     guiEdits()
     MainWindow.show()
     sys.exit(app.exec_())

@@ -9,7 +9,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt
-import os
+import math
 
 
 class Ui_MainWindow(object):
@@ -75,7 +75,7 @@ class Ui_MainWindow(object):
         self.tableWidget.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
         self.tableWidget.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
 
-        self.tableWidget.setRowCount(5000)
+        self.tableWidget.setRowCount(9)
         self.tableWidget.setColumnCount(14)
 
         self.tableWidget.verticalHeader().setDefaultSectionSize(50)
