@@ -9,7 +9,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt
-import math
+import os
 
 
 class Ui_MainWindow(object):
@@ -75,14 +75,36 @@ class Ui_MainWindow(object):
         self.tableWidget.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
         self.tableWidget.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
 
-        self.tableWidget.setRowCount(50)
-        self.tableWidget.setColumnCount(7)
-        self.tableWidget.setMouseTracking(True)
-              
-        self.testWidget = QtWidgets.QPushButton()
-            
-        self.tableWidget.setCellWidget(0, 4, self.testWidget)
-        # self.tableWidget.setCellWidget(30, 3, self.testWidget3)
+        self.tableWidget.setRowCount(500)
+        self.tableWidget.setColumnCount(14)
+
+        self.tableWidget.verticalHeader().setDefaultSectionSize(50)
+        self.tableWidget.horizontalHeader().setDefaultSectionSize(50)
+
+
+        # self.pic = QtGui.QPixmap("C:\\Users\\Samuel Mason\\Downloads\\28pix.png")
+        # self.pic = QtGui.QPixmap("C:\\Users\\Samuel Mason\\Downloads\\28pix2.png")
+        # self.testWidget = QtWidgets.QPushButton()
+
+###############
+        # self.pictureFolder = "C:\\Users\\Samuel Mason\\Downloads\\Leaf\\"
+        # self.pictureList = []
+
+        # for images in os.listdir(self.pictureFolder):
+        #     self.pictureList.append(images)
+
+        # for i in range(2):
+        #     print(self.pictureList[i])
+
+        # for i in range(7):
+        #     for j in range(15):
+
+        #         self.this_image = self.pictureList[i + j]
+        #         self.pic = QtGui.QPixmap(self.pictureFolder + self.this_image)
+        #         self.label = QtWidgets.QLabel("test")
+        #         self.label.setPixmap(self.pic)
+        #         self.tableWidget.setCellWidget(j, i, self.label)
+                          
 
         self.scrollArea.setWidget(self.tableWidget)
 
