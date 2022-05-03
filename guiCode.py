@@ -38,9 +38,9 @@ class Ui_MainWindow(object):
         self.canvasLabel.setMouseTracking(True)
         self.canvasLabel.setGeometry(QtCore.QRect(20, 60, 250, 250))
 
-        canvas = QtGui.QPixmap(250, 250)
-        canvas.fill(QtGui.QColor("white"))
-        self.canvasLabel.setPixmap(canvas)
+        self.canvas = QtGui.QPixmap(250, 250)
+        #self.canvas.fill(QtGui.QColor("white"))
+        self.canvasLabel.setPixmap(self.canvas)
 
         self.tabSwitcher.addTab(self.prediction, "")
         self.dataSet = QtWidgets.QWidget()
@@ -140,15 +140,8 @@ class Ui_MainWindow(object):
 
 
     def mouseMoveEvent(self, e):
-        print("test")
-        painter = QtGui.QPainter(self.canvasLabel.pixmap())
-        pen = QtGui.QPen()
-        pen.setColor(QtGui.QColor("#376F9F"))
-        painter.setPen(pen)
-        painter.drawPoint(e.x(), e.y())
-        painter.end()
-        self.update()
-
+        print("piss")
+        
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
@@ -175,7 +168,7 @@ class Ui_MainWindow(object):
         self.tabSwitcher.setTabText(self.tabSwitcher.indexOf(self.training), _translate("MainWindow", "Training"))
         self.label.setText(_translate("MainWindow", "Program Status"))
 
-
+"""
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
@@ -184,3 +177,4 @@ if __name__ == "__main__":
     ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())
+"""
