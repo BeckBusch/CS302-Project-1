@@ -18,7 +18,6 @@ def bar_custom(current, total, width=80):
     
     progress = math.ceil((current/total) * 100)
 
-
     if (progress != progressCheck):
         print("calc")
         progressCheck = progress
@@ -28,18 +27,14 @@ def bar_custom(current, total, width=80):
         timeTracker = time.time()
         timeString = str(datetime.timedelta(seconds=timeElasped))
 
-
-
     ui.progressBar.setProperty("value", progress)
     ui.timeRemaininCount.setText(timeString)
-
 
 
 def emnistDownload():
     global progressCheck
 
     #ui.cancelButton.setEnabled(True)
-
     progressCheck = 0
     #print("check")
     wget.download(urlLink, bar=bar_custom)
@@ -54,6 +49,7 @@ def emnistDownload():
         ui.progressBar.setProperty("value", progress)
         zf.extract(file)
 
+
 def clearCanvas():
     ui.canvas.fill(QtGui.QColor("white"))
 
@@ -63,16 +59,22 @@ def guiEdits():
     ui.clearCanvaButton.clicked.connect(clearCanvas)
 
     ui.canvasLabel = QtWidgets.QLabel(ui.prediction)
-    ui.canvasLabel.setMouseTracking(True)
+    
+    #ui.canvasLabel.setMouseTracking(True)
     ui.canvasLabel.setGeometry(QtCore.QRect(20, 60, 250, 250))
 
     ui.canvas = QtGui.QPixmap(250, 250)
     ui.canvas.fill(QtGui.QColor("blue"))
     ui.canvasLabel.setPixmap(ui.canvas)
 
-def test():
+    ui.canvasLabel.mouseMoveEvent = test
+
+
+def test(e):
     print("pogdfgf")
+    print(e)
     ui.downloadButton.setText("tstst")
+    print(QtGui.QCursor.pos())
 
 if __name__ == "__main__":
     import sys

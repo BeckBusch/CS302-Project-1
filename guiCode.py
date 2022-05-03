@@ -17,35 +17,50 @@ class Ui_MainWindow(object):
         MainWindow.resize(793, 812)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
-
-
         self.tabSwitcher = QtWidgets.QTabWidget(self.centralwidget)
         self.tabSwitcher.setGeometry(QtCore.QRect(0, 0, 791, 551))
         self.tabSwitcher.setObjectName("tabSwitcher")
         self.prediction = QtWidgets.QWidget()
         self.prediction.setObjectName("prediction")
-
         self.clearCanvaButton = QtWidgets.QPushButton(self.prediction)
         self.clearCanvaButton.setGeometry(QtCore.QRect(20, 320, 81, 23))
         self.clearCanvaButton.setObjectName("clearCanvaButton")
         self.submitCanvasButton = QtWidgets.QPushButton(self.prediction)
         self.submitCanvasButton.setGeometry(QtCore.QRect(144, 320, 131, 23))
         self.submitCanvasButton.setObjectName("submitCanvasButton")
-
-        
-
         self.canvasLabel = QtWidgets.QLabel(self.prediction)
-        self.canvasLabel.setMouseTracking(True)
         self.canvasLabel.setGeometry(QtCore.QRect(20, 60, 250, 250))
-
-        self.canvas = QtGui.QPixmap(250, 250)
-        #self.canvas.fill(QtGui.QColor("white"))
-        self.canvasLabel.setPixmap(self.canvas)
-
+        self.canvasLabel.setObjectName("canvasLabel")
+        self.textBrowser_2 = QtWidgets.QTextBrowser(self.prediction)
+        self.textBrowser_2.setGeometry(QtCore.QRect(290, 170, 191, 171))
+        self.textBrowser_2.setObjectName("textBrowser_2")
+        self.textBrowser_3 = QtWidgets.QTextBrowser(self.prediction)
+        self.textBrowser_3.setGeometry(QtCore.QRect(290, 60, 41, 41))
+        self.textBrowser_3.setObjectName("textBrowser_3")
+        self.textBrowser_4 = QtWidgets.QTextBrowser(self.prediction)
+        self.textBrowser_4.setGeometry(QtCore.QRect(440, 60, 41, 41))
+        self.textBrowser_4.setObjectName("textBrowser_4")
+        self.textBrowser_5 = QtWidgets.QTextBrowser(self.prediction)
+        self.textBrowser_5.setGeometry(QtCore.QRect(390, 60, 41, 41))
+        self.textBrowser_5.setObjectName("textBrowser_5")
+        self.textBrowser_6 = QtWidgets.QTextBrowser(self.prediction)
+        self.textBrowser_6.setGeometry(QtCore.QRect(340, 60, 41, 41))
+        self.textBrowser_6.setObjectName("textBrowser_6")
+        self.textBrowser_7 = QtWidgets.QTextBrowser(self.prediction)
+        self.textBrowser_7.setGeometry(QtCore.QRect(290, 110, 41, 41))
+        self.textBrowser_7.setObjectName("textBrowser_7")
+        self.textBrowser_8 = QtWidgets.QTextBrowser(self.prediction)
+        self.textBrowser_8.setGeometry(QtCore.QRect(340, 110, 41, 41))
+        self.textBrowser_8.setObjectName("textBrowser_8")
+        self.textBrowser_9 = QtWidgets.QTextBrowser(self.prediction)
+        self.textBrowser_9.setGeometry(QtCore.QRect(390, 110, 41, 41))
+        self.textBrowser_9.setObjectName("textBrowser_9")
+        self.textBrowser_10 = QtWidgets.QTextBrowser(self.prediction)
+        self.textBrowser_10.setGeometry(QtCore.QRect(440, 110, 41, 41))
+        self.textBrowser_10.setObjectName("textBrowser_10")
         self.tabSwitcher.addTab(self.prediction, "")
         self.dataSet = QtWidgets.QWidget()
         self.dataSet.setObjectName("dataSet")
-
         self.downloadButton = QtWidgets.QPushButton(self.dataSet)
         self.downloadButton.setGeometry(QtCore.QRect(30, 150, 101, 23))
         self.downloadButton.setObjectName("downloadButton")
@@ -139,15 +154,21 @@ class Ui_MainWindow(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
 
-    def mouseMoveEvent(self, e):
-        print("piss")
+    def mouseMoveEvent(self, event):
+        global Mouse_X
+        global Mouse_Y
+        Mouse_X = event.x()
+        Mouse_Y = event.y()
+        print("mouse X,Y: {},{}" .format(Mouse_X, Mouse_Y))
+        self.lastPoint = self.GUI.LB_WORK.mapFromParent(event .pos())
+        print('X,Y WORK {}' .format(self.lastPoint))
         
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.clearCanvaButton.setText(_translate("MainWindow", "Clear Canvas"))
         self.submitCanvasButton.setText(_translate("MainWindow", "Submit Drawing"))
-        #self.canvasLabel.setText(_translate("MainWindow", "TextLabel"))
+        self.canvasLabel.setText(_translate("MainWindow", "TextLabel"))
         self.tabSwitcher.setTabText(self.tabSwitcher.indexOf(self.prediction), _translate("MainWindow", "Prediction"))
         self.downloadButton.setText(_translate("MainWindow", "Begin Download"))
         self.timeRemainingLabel.setText(_translate("MainWindow", "Time Remaininig:"))
@@ -168,7 +189,7 @@ class Ui_MainWindow(object):
         self.tabSwitcher.setTabText(self.tabSwitcher.indexOf(self.training), _translate("MainWindow", "Training"))
         self.label.setText(_translate("MainWindow", "Program Status"))
 
-"""
+
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
@@ -177,4 +198,3 @@ if __name__ == "__main__":
     ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())
-"""
