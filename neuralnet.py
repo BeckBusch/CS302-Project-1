@@ -7,13 +7,14 @@ import torch
 from torch import nn, optim, cuda
 from torch.utils import data
 from torchvision import datasets, transforms
+from PIL import Image
 import time
 import math
 import os
 
 # Training settings
 batch_size = 128
-epoch_count = 5
+epoch_count = 1
 train_ratio = 0.7
 device = 'cuda:0' if cuda.is_available() else 'cpu'
 print(f"Training EMNIST on {device}")
@@ -236,6 +237,16 @@ if __name__ == '__main__':
 
     minutes, seconds = divmod(time.time() - start_time, 60)
     print(f"Total time spent testing & training: {minutes:.0f} minutes {seconds:.0f} seconds")
+
+# Get prediction for a character
+def predict_character():
+    model.load_state_dict(torch.load(os.path.join(os.path.dirname(os.path.abspath(__file__)), "saved_model")))
+    image = Image.open("testimg.jpg")
+    transform = transforms.Compose([
+                transforms.ToTensor(),
+                transforms.Resize(28)])
+    image = transform(image)
+    test()
 
 # Save the trained model if desired
 def save_model(save_state):     
