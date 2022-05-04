@@ -17,6 +17,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(793, 812)
+        MainWindow.setFixedSize(MainWindow.size())
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.tabSwitcher = QtWidgets.QTabWidget(self.centralwidget)
@@ -127,94 +128,32 @@ class Ui_MainWindow(object):
         self.tabSwitcher.addTab(self.viewDataset, "")
 
         self.viewDataset.layout = QtWidgets.QVBoxLayout()
+        self.testingImages = QtWidgets.QPushButton()
+        self.trainingImages = QtWidgets.QPushButton()
 
-        self.inputLine = QtWidgets.QLineEdit()
+        self.imageOptions = QtWidgets.QHBoxLayout()
+        self.imageOptions.addStretch(1)
+        self.imageOptions.addWidget(self.trainingImages)
+        self.imageOptions.addWidget(self.testingImages)
 
-        self.searchBar = QtWidgets.QHBoxLayout()
-        self.searchBar.addStretch(1)
-        self.searchBar.addWidget(self.inputLine)
-
-        self.viewDataset.layout.addLayout(self.searchBar)
+        self.viewDataset.layout.addLayout(self.imageOptions)
         self.scrollArea = QtWidgets.QScrollArea(widgetResizable = True)
-
-        # self.vertScrollBar.setValue(100)
-
-        # self.scrollArea.setMouseTracking(True)
-        # self.scrollArea.horizontalScrollBar().setEnabled(False)
-
-
         self.tableWidget = QtWidgets.QTableWidget()
         self.tableWidget.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
         self.tableWidget.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
 
         self.tableWidget.setRowCount(9)
         self.tableWidget.setColumnCount(14)
-
         self.tableWidget.verticalHeader().setDefaultSectionSize(50)
         self.tableWidget.horizontalHeader().setDefaultSectionSize(50)
-
-
-        # self.pic = QtGui.QPixmap("C:\\Users\\Samuel Mason\\Downloads\\28pix.png")
-        # self.pic = QtGui.QPixmap("C:\\Users\\Samuel Mason\\Downloads\\28pix2.png")
-        # self.testWidget = QtWidgets.QPushButton()
-
-###############
-        # self.pictureFolder = "C:\\Users\\Samuel Mason\\Downloads\\Leaf\\"
-        # self.pictureList = []
-
-        # for images in os.listdir(self.pictureFolder):
-        #     self.pictureList.append(images)
-
-        # for i in range(2):
-        #     print(self.pictureList[i])
-
-        # for i in range(7):
-        #     for j in range(15):
-
-        #         self.this_image = self.pictureList[i + j]
-        #         self.pic = QtGui.QPixmap(self.pictureFolder + self.this_image)
-        #         self.label = QtWidgets.QLabel("test")
-        #         self.label.setPixmap(self.pic)
-        #         self.tableWidget.setCellWidget(j, i, self.label)
-                          
-
+                        
         self.scrollArea.setWidget(self.tableWidget)
-
-        # self.scrollZone.setWidget(self.scrollArea)
-
         self.viewDataset.setLayout(self.viewDataset.layout)
-
         self.viewDataset.layout.addWidget(self.scrollArea)
-
-
-
-
-
-        # image_contents_widget = QtWidgets.QWidget()
-        # self.scrollArea.setWidget(image_contents_widget)
-        # self.page_layout = QtWidgets.QVBoxLayout(image_contents_widget)
-
-
-        # contents_width = self.scrollArea.frameGeometry().width()
-        # contents_height = self.scrollArea.frameGeometry().height()
-
-        # self.tableWidget = QtGui.QTableWidget()
-
-        # column_count = math.floor(contents_width / 28)
-        # row_count = math.floor(814255 / column_count) + 1
-
-        # self.tableWidget.setRowCount(row_count)
-        # self.tableWidget.setColumnCount(column_count)
-
-        # for image in os.listdir(DIRECTORY):
-        #     pixmap = QtGui.QPixmap(os.path.join(DIRECTORY, file location))
-        #     if not pixmap.isNull():
-        #         label = QtGui.QLabel(pixmap = pixmap)
-        #         page_layout.addWidget(label)
-
-        # width / image_size (floor) = images horiz
-        # height / image_size (floor) = images vert
-
+        self.currentCount = QtWidgets.QLabel()
+        self.viewDataset.layout.addWidget(self.currentCount)
+        self.itemCount = QtWidgets.QLabel()
+        self.viewDataset.layout.addWidget(self.itemCount)
 
         self.training = QtWidgets.QWidget()
         self.training.setObjectName("training")
@@ -264,6 +203,7 @@ class Ui_MainWindow(object):
         self.startTrainingButton = QtWidgets.QPushButton(self.training)
         self.startTrainingButton.setGeometry(QtCore.QRect(30, 250, 91, 23))
         self.startTrainingButton.setObjectName("startTrainingButton")
+        
         self.tabSwitcher.addTab(self.training, "")
         self.textBrowser = QtWidgets.QTextBrowser(self.centralwidget)
         self.textBrowser.setGeometry(QtCore.QRect(10, 580, 771, 192))
@@ -298,6 +238,8 @@ class Ui_MainWindow(object):
         self.cancelButton.setText(_translate("MainWindow", "Cancel Download"))
         self.tabSwitcher.setTabText(self.tabSwitcher.indexOf(self.dataSet), _translate("MainWindow", "DataSet"))
         self.tabSwitcher.setTabText(self.tabSwitcher.indexOf(self.viewDataset), _translate("MainWindow", "View DataSet"))
+        self.testingImages.setText("Testing data")
+        self.trainingImages.setText("Training data")
         self.modelSelector.setItemText(0, _translate("MainWindow", "LeNet"))
         self.modelSelector.setItemText(1, _translate("MainWindow", "AlexNet"))
         self.modelSelector.setItemText(2, _translate("MainWindow", "VGG11"))

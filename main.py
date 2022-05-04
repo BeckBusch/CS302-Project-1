@@ -4,14 +4,18 @@ import zipfile, wget
 import guiCode
 import torchvision
 from PyQt5.QtCore import Qt
-from torchvision import transforms
+import torch
+from torch import nn, optim, cuda
+from torch.utils import data
+from torchvision import datasets, transforms
 import idx2numpy
 import numpy as np
 from PIL import Image
 from PIL.ImageQt import ImageQt
-
-urlLink = "https://www.itl.nist.gov/iaui/vip/cs_links/EMNIST/gzip.zip"
-destination = "gzip.zip"
+import neuralnet
+import os
+import gzip
+import shutil
 
 progressCheck = 0
 timeTracker = 0
@@ -21,44 +25,46 @@ last_x = None
 last_y = None
 paintCanvas = None
 
-rowCount = 50
 prev = 0
 
-image_array = []        
+image_array = [] 
+dataset_location = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'emnist-byclass-train-images-idx3-ubyte')
+full_dataset = open(dataset_location)
 
-def train_picture_list():
-    pictureFolder = "C:\\Users\\GGPC\\Downloads\\thing\\"
+#emnist download link
+urlLink = "https://www.itl.nist.gov/iaui/vip/cs_links/EMNIST/gzip.zip"
+#destination for emnist zip file in root
+destination = "gzip.zip"
+# location of the prefered traininig file once uinzipped
+trainLocation = "gzip\\emnist-byclass-test-images-idx3-ubyte.gz"
+#place to store the unzipped training file for use by other parts of the code
+trainDestination = "emnist-byclass-test-images-idx3-ubyte"
+
+def picture_list_test():
+    global image_array
     image = 'emnist-byclass-test-images-idx3-ubyte'
-    image_array = idx2numpy.convert_from_file(pictureFolder + image)
-    ui.tableWidget.setRowCount(math.floor(len(image_array) / 2))
-    return image_array
+    picture_location = os.path.join(os.path.dirname(os.path.abspath(__file__)), image)
+    image_array = idx2numpy.convert_from_file(picture_location)
+    ui.tableWidget.setRowCount(math.floor(len(image_array) / 14) + 1)
+    ui.itemCount.setText(f"Total number of images: {len(image_array)}")
+    update_pos()
 
-
-def bar_custom(current, total, width=80):
-    global progressCheck, timeTracker, timeString
-    timeElasped = 0
-
-    progress = math.ceil((current/total) * 100)
-
-    if (progress != progressCheck):
-        print("calc")
-        progressCheck = progress
-        timeElasped = time.time() - timeTracker
-        timeElasped = timeElasped * (100-progress)
-        timeElasped = math.ceil(timeElasped)
-        timeTracker = time.time()
-        timeString = str(datetime.timedelta(seconds=timeElasped))
-
-    ui.progressBar.setProperty("value", progress)
-    ui.timeRemaininCount.setText(timeString)
+def picture_list_train():
+    global image_array
+    image = 'emnist-byclass-train-images-idx3-ubyte'
+    picture_location = os.path.join(os.path.dirname(os.path.abspath(__file__)), image)
+    image_array = idx2numpy.convert_from_file(picture_location)
+    ui.tableWidget.setRowCount(math.floor(len(image_array) / 14) + 1)
+    ui.itemCount.setText(f"Total number of images: {len(image_array)}")
+    update_pos()
 
 def emnistDownload():
-    global progressCheck
+    global progressCheck, full_dataset
 
     #ui.cancelButton.setEnabled(True)
     progressCheck = 0
-    wget.download(urlLink, bar=bar_custom)
-    
+    #wget.download(urlLink, bar=bar_custom)
+
     ui.timeRemainingLabel.setText("Unzipping:")
     zf = zipfile.ZipFile(destination)
     uncompress_size = sum((file.file_size for file in zf.infolist()))
@@ -69,8 +75,50 @@ def emnistDownload():
         ui.progressBar.setProperty("value", progress)
         zf.extract(file)
 
+    ui.timeRemainingLabel.setText("Unzipping Data:")
+    with gzip.open(trainLocation, 'rb') as f_in:
+        with open(trainDestination, 'wb') as f_out:
+            shutil.copyfileobj(f_in, f_out)
+
+    full_dataset = os.path.join(os.path.dirname(os.path.abspath(__file__)), "\\emnist-byclass-train-images-idx3-ubyte")
+
+def bar_custom(current, total, width=80):
+    global progressCheck, timeTracker, timeString
+    timeElapsed = 0
+
+    progress = math.ceil((current/total) * 100)
+
+    if (progress != progressCheck):
+        progressCheck = progress
+        timeElapsed = time.time() - timeTracker
+        timeElapsed = timeElapsed * (100-progress)
+        timeElapsed = math.ceil(timeElapsed)
+        timeTracker = time.time()
+        timeString = str(datetime.timedelta(seconds=timeElapsed))
+
+    ui.progressBar.setProperty("value", progress)
+    ui.timeRemaininCount.setText(timeString)
+
 def cancelDownload():
     pass
+
+def model_selector(selected_model):
+    global transform 
+    transform = neuralnet.model_selector(selected_model)
+    import_state = neuralnet.import_model("no")
+
+def train_button():
+    if 1 == 1:
+        training_loader, train_size, _ = neuralnet.loaders(full_dataset, transform)# if import_state == True:
+        train(1, training_loader, train_size)
+    else:
+        pass
+ 
+def train(epoch, training_loader, train_size):
+    neuralnet.train(epoch, training_loader, train_size)
+
+def test(testing_loader):
+    neuralnet.test(testing_loader)
 
 def clearCanvas():
     paintCanvas.fill(QtGui.QColor("white"))
@@ -83,14 +131,15 @@ def painting(e):
         last_x = e.x()
         last_y = e.y()
         return
-    
+
     painter = QtGui.QPainter(paintCanvas)
     p = painter.pen()
-    p.setWidth(16)
+    p.setWidth(12)
     p.setColor(QtGui.QColor("black"))
     painter.setPen(p)
     #painter.drawLine(last_x+580, last_y+220, e.x()+580, e.y()+220)
-    painter.drawLine(last_x, last_y, e.x(), e.y())
+    painter.drawEllipse(e.x(), e.y(), 12, 12)
+    # painter.drawLine(last_x, last_y, e.x(), e.y())
     painter.end()
     ui.canvasLabel.setPixmap(paintCanvas)
 
@@ -109,12 +158,6 @@ def saveImage():
     image = paintCanvas.toImage()
     image.save(r'tmp.png')
 
-def test(e):
-    pass
-    #print("pogdfgf")
-    #print(e)
-    #ui.downloadButton.setText("tstst")
-
 def update_pos():
     global prev
     pos = ui.tableWidget.verticalScrollBar().value()
@@ -126,15 +169,20 @@ def update_pos():
             for j in range(abs(pos - prev)):
                 ui.tableWidget.removeCellWidget(prev + 15 - j - 1, i)
 
-    for i in range(14):
-        for j in range(9):
+    for rows in range(9):
+        for cols in range(14):
+
+            if (14 * (pos + rows) + cols >= len(image_array)):
+                ui.currentCount.setText(f"Images currently on screen: {len(image_array) - math.floor(len(image_array) / 14) * 14 + 112}")
+                break;
+            ui.currentCount.setText(f"Images currently on screen: 126")
 
             transform=torchvision.transforms.Compose([
                 lambda x: transforms.functional.rotate(x, -90),
                 lambda x: transforms.functional.hflip(x),
                 ])
             
-            PIL_image = Image.fromarray(image_array[pos + j + 9 * i].astype('uint8'), 'L')
+            PIL_image = Image.fromarray(image_array[14 * (pos + rows) + cols].astype('uint8'), 'L')
             PIL_image = transform(PIL_image)
             qim = ImageQt(PIL_image)
 
@@ -142,10 +190,9 @@ def update_pos():
             qpix = qpix.scaled(45, 45, Qt.KeepAspectRatio, Qt.FastTransformation)
             label = QtWidgets.QLabel("")
             label.setPixmap(qpix)
-            ui.tableWidget.setCellWidget(pos + j, i, label)
+            ui.tableWidget.setCellWidget(pos + rows, cols, label)
 
     prev = pos
-
 
 if __name__ == "__main__":
     import sys
@@ -153,15 +200,17 @@ if __name__ == "__main__":
     MainWindow = QtWidgets.QMainWindow()
     ui = guiCode.Ui_MainWindow()
     ui.setupUi(MainWindow)
-    image_array = train_picture_list()
-    update_pos()
+    picture_list_test()
 
     ui.downloadButton.clicked.connect(emnistDownload)
     ui.clearCanvaButton.clicked.connect(clearCanvas)
     ui.submitCanvasButton.clicked.connect(saveImage)
     ui.tableWidget.verticalScrollBar().valueChanged.connect(update_pos)
-   
-
+    ui.modelSelector.currentTextChanged.connect(model_selector)
+    ui.startTrainingButton.clicked.connect(train_button)
+    ui.testingImages.clicked.connect(picture_list_test)
+    ui.trainingImages.clicked.connect(picture_list_train)
+    #emnistDownload()
     #ui.canvasLabel = QtWidgets.QLabel(ui.prediction)
     #   ui.canvasLabel.setGeometry(QtCore.QRect(20, 60, 250, 250))
     paintCanvas = QtGui.QPixmap(250, 250)
