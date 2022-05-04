@@ -8,7 +8,6 @@ from torch import nn, optim, cuda
 from torch.utils import data
 from torchvision import datasets, transforms
 from PIL import Image
-import time
 import math
 import os
 

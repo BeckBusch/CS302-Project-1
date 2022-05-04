@@ -4,12 +4,8 @@ import zipfile, wget
 import guiCode
 import torchvision
 from PyQt5.QtCore import Qt
-import torch
-from torch import nn, optim, cuda
-from torch.utils import data
-from torchvision import datasets, transforms
+from torchvision import transforms
 import idx2numpy
-import numpy as np
 from PIL import Image
 from PIL.ImageQt import ImageQt
 import neuralnet
