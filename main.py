@@ -28,7 +28,7 @@ image_array = []
 def train_picture_list():
     pictureFolder = "C:\\Users\\Samuel Mason\\Downloads\\Leaf\\"
     image = 'emnist-byclass-test-images-idx3-ubyte'
-    image_array = idx2numpy.convert_from_file(pictureFolder + image)
+    image_array = idx2numpy.convert_from_file(image)
     ui.tableWidget.setRowCount(math.floor(len(image_array) / 14) + 1)
     ui.itemCount.setText(f"Total number of images: {len(image_array)}")
     return image_array
@@ -131,7 +131,9 @@ def update_pos():
         for cols in range(14):
 
             if (14 * (pos + rows) + cols >= math.floor(len(image_array))):
+                ui.currentCount.setText(f"Images currently on screen: {112 + cols}")
                 break;
+            ui.currentCount.setText(f"Images currently on screen: 126")
 
             transform=torchvision.transforms.Compose([
                 lambda x: transforms.functional.rotate(x, -90),

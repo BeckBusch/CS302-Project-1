@@ -305,7 +305,7 @@ class Ui_MainWindow(object):
         self.cancelButton.setText(_translate("MainWindow", "Cancel Download"))
         self.tabSwitcher.setTabText(self.tabSwitcher.indexOf(self.dataSet), _translate("MainWindow", "DataSet"))
         self.tabSwitcher.setTabText(self.tabSwitcher.indexOf(self.viewDataset), _translate("MainWindow", "View DataSet"))
-        self.currentCount.setText("Images currently on-screen: 126")
+        
         self.modelSelector.setItemText(0, _translate("MainWindow", "LeNet"))
         self.modelSelector.setItemText(1, _translate("MainWindow", "AlexNet"))
         self.modelSelector.setItemText(2, _translate("MainWindow", "VGG11"))
