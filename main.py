@@ -28,8 +28,8 @@ paintCanvas = None
 prev = 0
 
 image_array = [] 
-dataset_location = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'emnist-byclass-train-images-idx3-ubyte')
-full_dataset = open(dataset_location)
+#dataset_location = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'emnist-byclass-train-images-idx3-ubyte')
+#full_dataset = open(dataset_location)
 
 #emnist download link
 urlLink = "https://www.itl.nist.gov/iaui/vip/cs_links/EMNIST/gzip.zip"
@@ -39,6 +39,9 @@ destination = "gzip.zip"
 trainLocation = "gzip\\emnist-byclass-test-images-idx3-ubyte.gz"
 #place to store the unzipped training file for use by other parts of the code
 trainDestination = "emnist-byclass-test-images-idx3-ubyte"
+testLocation = "gzip\\emnist-byclass-train-images-idx3-ubyte.gz"
+testDestination = "emnist-byclass-train-images-idx3-ubyte"
+
 
 def picture_list_test():
     global image_array
@@ -49,6 +52,7 @@ def picture_list_test():
     ui.itemCount.setText(f"Total number of images: {len(image_array)}")
     update_pos()
 
+
 def picture_list_train():
     global image_array
     image = 'emnist-byclass-train-images-idx3-ubyte'
@@ -58,12 +62,13 @@ def picture_list_train():
     ui.itemCount.setText(f"Total number of images: {len(image_array)}")
     update_pos()
 
+
 def emnistDownload():
-    global progressCheck, full_dataset
+    global progressCheck
 
     #ui.cancelButton.setEnabled(True)
     progressCheck = 0
-    #wget.download(urlLink, bar=bar_custom)
+    wget.download(urlLink, bar=bar_custom)
 
     ui.timeRemainingLabel.setText("Unzipping:")
     zf = zipfile.ZipFile(destination)
@@ -75,12 +80,17 @@ def emnistDownload():
         ui.progressBar.setProperty("value", progress)
         zf.extract(file)
 
-    ui.timeRemainingLabel.setText("Unzipping Data:")
+    ui.timeRemainingLabel.setText("Unzipping Testing Data:")
     with gzip.open(trainLocation, 'rb') as f_in:
         with open(trainDestination, 'wb') as f_out:
             shutil.copyfileobj(f_in, f_out)
+    
+    ui.timeRemainingLabel.setText("Unzipping Training Data:")
+    with gzip.open(testLocation, 'rb') as f_in:
+        with open(testDestination, 'wb') as f_out:
+            shutil.copyfileobj(f_in, f_out)
 
-    full_dataset = os.path.join(os.path.dirname(os.path.abspath(__file__)), "\\emnist-byclass-train-images-idx3-ubyte")
+    #full_dataset = os.path.join(os.path.dirname(os.path.abspath(__file__)), "\\emnist-byclass-train-images-idx3-ubyte")
 
 def bar_custom(current, total, width=80):
     global progressCheck, timeTracker, timeString
@@ -200,7 +210,7 @@ if __name__ == "__main__":
     MainWindow = QtWidgets.QMainWindow()
     ui = guiCode.Ui_MainWindow()
     ui.setupUi(MainWindow)
-    picture_list_test()
+    #picture_list_test()
 
     ui.downloadButton.clicked.connect(emnistDownload)
     ui.clearCanvaButton.clicked.connect(clearCanvas)
@@ -210,9 +220,7 @@ if __name__ == "__main__":
     ui.startTrainingButton.clicked.connect(train_button)
     ui.testingImages.clicked.connect(picture_list_test)
     ui.trainingImages.clicked.connect(picture_list_train)
-    #emnistDownload()
-    #ui.canvasLabel = QtWidgets.QLabel(ui.prediction)
-    #   ui.canvasLabel.setGeometry(QtCore.QRect(20, 60, 250, 250))
+
     paintCanvas = QtGui.QPixmap(250, 250)
     paintCanvas.fill(QtGui.QColor("white"))
     ui.canvasLabel.setPixmap(paintCanvas)
