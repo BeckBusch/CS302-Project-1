@@ -21,16 +21,16 @@ last_x = None
 last_y = None
 paintCanvas = None
 
-rowCount = 50
 prev = 0
 
 image_array = []        
 
 def train_picture_list():
-    pictureFolder = "C:\\Users\\GGPC\\Downloads\\thing\\"
+    pictureFolder = "C:\\Users\\Samuel Mason\\Downloads\\Leaf\\"
     image = 'emnist-byclass-test-images-idx3-ubyte'
     image_array = idx2numpy.convert_from_file(pictureFolder + image)
-    ui.tableWidget.setRowCount(math.floor(len(image_array) / 2))
+    ui.tableWidget.setRowCount(math.floor(len(image_array) / 14) + 1)
+    ui.itemCount.setText(f"Total number of images: {len(image_array)}")
     return image_array
 
 
@@ -86,11 +86,12 @@ def painting(e):
     
     painter = QtGui.QPainter(paintCanvas)
     p = painter.pen()
-    p.setWidth(16)
+    p.setWidth(12)
     p.setColor(QtGui.QColor("black"))
     painter.setPen(p)
     #painter.drawLine(last_x+580, last_y+220, e.x()+580, e.y()+220)
-    painter.drawLine(last_x, last_y, e.x(), e.y())
+    painter.drawEllipse(e.x(), e.y(), 12, 12)
+    # painter.drawLine(last_x, last_y, e.x(), e.y())
     painter.end()
     ui.canvasLabel.setPixmap(paintCanvas)
 
@@ -126,15 +127,18 @@ def update_pos():
             for j in range(abs(pos - prev)):
                 ui.tableWidget.removeCellWidget(prev + 15 - j - 1, i)
 
-    for i in range(14):
-        for j in range(9):
+    for rows in range(9):
+        for cols in range(14):
+
+            if (14 * (pos + rows) + cols >= math.floor(len(image_array))):
+                break;
 
             transform=torchvision.transforms.Compose([
                 lambda x: transforms.functional.rotate(x, -90),
                 lambda x: transforms.functional.hflip(x),
                 ])
             
-            PIL_image = Image.fromarray(image_array[pos + j + 9 * i].astype('uint8'), 'L')
+            PIL_image = Image.fromarray(image_array[14 * (pos + rows) + cols].astype('uint8'), 'L')
             PIL_image = transform(PIL_image)
             qim = ImageQt(PIL_image)
 
@@ -142,7 +146,7 @@ def update_pos():
             qpix = qpix.scaled(45, 45, Qt.KeepAspectRatio, Qt.FastTransformation)
             label = QtWidgets.QLabel("")
             label.setPixmap(qpix)
-            ui.tableWidget.setCellWidget(pos + j, i, label)
+            ui.tableWidget.setCellWidget(pos + rows, cols, label)
 
     prev = pos
 

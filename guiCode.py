@@ -17,6 +17,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(793, 812)
+        MainWindow.setFixedSize(MainWindow.size())
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.tabSwitcher = QtWidgets.QTabWidget(self.centralwidget)
@@ -186,6 +187,12 @@ class Ui_MainWindow(object):
 
         self.viewDataset.layout.addWidget(self.scrollArea)
 
+        self.currentCount = QtWidgets.QLabel()
+        self.viewDataset.layout.addWidget(self.currentCount)
+
+        self.itemCount = QtWidgets.QLabel()
+        self.viewDataset.layout.addWidget(self.itemCount)
+
 
 
 
@@ -298,6 +305,7 @@ class Ui_MainWindow(object):
         self.cancelButton.setText(_translate("MainWindow", "Cancel Download"))
         self.tabSwitcher.setTabText(self.tabSwitcher.indexOf(self.dataSet), _translate("MainWindow", "DataSet"))
         self.tabSwitcher.setTabText(self.tabSwitcher.indexOf(self.viewDataset), _translate("MainWindow", "View DataSet"))
+        self.currentCount.setText("Images currently on-screen: 126")
         self.modelSelector.setItemText(0, _translate("MainWindow", "LeNet"))
         self.modelSelector.setItemText(1, _translate("MainWindow", "AlexNet"))
         self.modelSelector.setItemText(2, _translate("MainWindow", "VGG11"))
